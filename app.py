@@ -2,8 +2,10 @@ import pickle
 import requests
 import pandas as pd
 from flask import Flask, render_template, request
+from flask_frozen import Freezer
 
 app = Flask(__name__)
+freezer = Freezer(app)
 
 movies = pickle.load(open("movies.pkl", 'rb'))
 similarity = pickle.load(open("similarity.pkl", 'rb'))
