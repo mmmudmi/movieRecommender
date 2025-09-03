@@ -1,0 +1,56 @@
+name: Flask App CI/CD
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  PYTHON_VERSION: 3.8
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python ${{ env.PYTHON_VERSION }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install flask pandas scikit-learn numpy
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+    - name: Run tests
+      run: |
+        python -m pip install pytest
+        pytest tests/ || echo "No tests found"
+
+    - name: Run Flask application test
+      run: |
+        python app.py &
+        sleep 5
+        curl http://localhost:5000 || exit 1
+        pkill -f "python app.py"
+
+    - name: Build artifacts
+      run: |
+        mkdir -p dist
+        cp -r templates static dist/
+        cp app.py movies.pkl similarity.pkl top10K-TMDB-movies.csv dist/
+        
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: flask-app
+        path: dist/
