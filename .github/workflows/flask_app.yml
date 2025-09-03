@@ -58,7 +58,7 @@ jobs:
         path: dist/
 
     - name: Display structure of downloaded files
-      run: ls -R dist/
+      run: ls -hR dist/
 
   deploy:
     needs: test-and-build  # wait for the "build" job to get done before executing this "deploy" job
