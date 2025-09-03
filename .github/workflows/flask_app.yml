@@ -48,7 +48,7 @@ jobs:
     - name: Build artifacts
       run: |
         mkdir -p dist
-        cp app.py movies.pkl similarity.pkl templates/home.html templates/recommend.html dist/
+        cp app.py movies.pkl similarity.pkl templates/home.html templates/recommendations.html dist/
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
