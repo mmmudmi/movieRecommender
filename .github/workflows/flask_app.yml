@@ -45,18 +45,33 @@ jobs:
         curl http://localhost:5000 || exit 1
         pkill -f "python app.py"
 
-    - name: Prepare and validate artifacts
+    - name: Generate static files
       run: |
-        mkdir -p dist
-        mkdir -p dist/templates
+        echo 'from flask_frozen import Freezer; from app import app, movies; freezer = Freezer(app); @freezer.register_generator; def recommend(): return [{"movie": str(id)} for id in movies["id"].tolist()[:10]]; freezer.freeze() if __name__ == "__main__" else None' > freeze.py
+        python freeze.py
+        mkdir -p build/static
         
-        echo "Checking and copying files..."
-        for file in app.py movies.pkl similarity.pkl; do
+    - name: Build artifacts
+      run: |
+        mkdir -p dist/static
+        
+        # First, copy all static files
+        if [ -d "build" ]; then
+          cp -r build/* dist/
+        else
+          cp -r templates/* dist/
+        fi
+        
+        # Create data directory for model files
+        mkdir -p dist/static/data
+        
+        # Copy and validate model files
+        for file in movies.pkl similarity.pkl; do
           if [ -f "$file" ]; then
             if [ ! -L "$file" ]; then
               file_size=$(stat -c%s "$file")
-              if [ $file_size -lt 10737418240 ]; then  # 10GB in bytes
-                cp --preserve=timestamps "$file" dist/ || echo "Failed to copy $file"
+              if [ $file_size -lt 10737418240 ]; then
+                cp --preserve=timestamps "$file" dist/static/data/ || echo "Failed to copy $file"
                 echo "Copied $file ($(($file_size/1024/1024))MB)"
               else
                 echo "Error: $file is too large ($(($file_size/1024/1024))MB)"
@@ -70,12 +85,13 @@ jobs:
           fi
         done
         
-        echo "Copying template files..."
-        for file in templates/*.html; do
-          if [ -f "$file" ] && [ ! -L "$file" ]; then
-            cp -P "$file" dist/templates/ || echo "Failed to copy $file"
-          fi
-        done
+        # Add .nojekyll file
+        touch dist/.nojekyll
+        
+        # Create a simple index.html if it doesn't exist
+        if [ ! -f "dist/index.html" ]; then
+          cp dist/home.html dist/index.html 2>/dev/null || echo "No home.html found"
+        fi
         
         echo "Validating final artifact structure..."
         find dist -type l -exec echo "Error: Found symlink: {}" \; -exec exit 1 \;
@@ -85,6 +101,10 @@ jobs:
           exit 1
         fi
         echo "Total artifact size: $(($total_size/1024/1024))MB"
+        
+        # List final structure
+        echo "Final directory structure:"
+        ls -R dist/
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
