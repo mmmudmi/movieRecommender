@@ -45,10 +45,12 @@ jobs:
         curl http://localhost:5000 || exit 1
         pkill -f "python app.py"
 
-    - name: Build artifacts
+    - name: Build static files
       run: |
         mkdir -p dist
-        cp -r build/* dist/
+        echo 'from flask_frozen import Freezer; from app import app; freezer = Freezer(app); freezer.freeze()' > freeze.py
+        python freeze.py
+        cp -r build dist/
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
