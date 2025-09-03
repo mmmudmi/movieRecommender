@@ -48,7 +48,7 @@ jobs:
     - name: Build artifacts
       run: |
         mkdir -p dist
-        cp -r templates static dist/
+        cp -r templates dist/
         cp app.py movies.pkl similarity.pkl top10K-TMDB-movies.csv dist/
         
     - name: Upload artifact
