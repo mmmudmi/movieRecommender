@@ -50,7 +50,7 @@ jobs:
         cp app.py movies.pkl similarity.pkl top10K-TMDB-movies.csv dist/
         
     - name: Upload artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: flask-app
         path: dist/
