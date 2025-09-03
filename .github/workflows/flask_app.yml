@@ -45,22 +45,46 @@ jobs:
         curl http://localhost:5000 || exit 1
         pkill -f "python app.py"
 
-    - name: Build artifacts
+    - name: Prepare and validate artifacts
       run: |
         mkdir -p dist
         mkdir -p dist/templates
-        # Copy files with error checking
+        
+        echo "Checking and copying files..."
         for file in app.py movies.pkl similarity.pkl; do
-          if [ -f "$file" ] && [ ! -L "$file" ]; then
-            cp "$file" dist/ || echo "Failed to copy $file"
+          if [ -f "$file" ]; then
+            if [ ! -L "$file" ]; then
+              file_size=$(stat -f%z "$file")
+              if [ $file_size -lt 10737418240 ]; then  # 10GB in bytes
+                cp -P "$file" dist/ || echo "Failed to copy $file"
+                echo "Copied $file ($(($file_size/1024/1024))MB)"
+              else
+                echo "Error: $file is too large ($(($file_size/1024/1024))MB)"
+                exit 1
+              fi
+            else
+              echo "Warning: Skipping symlink $file"
+            fi
+          else
+            echo "Warning: $file not found"
           fi
         done
-        # Copy template files
+        
+        echo "Copying template files..."
         for file in templates/*.html; do
           if [ -f "$file" ] && [ ! -L "$file" ]; then
-            cp "$file" dist/templates/ || echo "Failed to copy $file"
+            cp -P "$file" dist/templates/ || echo "Failed to copy $file"
           fi
         done
+        
+        echo "Validating final artifact structure..."
+        find dist -type l -exec echo "Error: Found symlink: {}" \; -exec exit 1 \;
+        total_size=$(du -sb dist | cut -f1)
+        if [ $total_size -gt 10737418240 ]; then
+          echo "Error: Total artifact size ($(($total_size/1024/1024))MB) exceeds 10GB limit"
+          exit 1
+        fi
+        echo "Total artifact size: $(($total_size/1024/1024))MB"
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
