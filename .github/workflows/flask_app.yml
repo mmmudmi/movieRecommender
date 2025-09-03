@@ -30,7 +30,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install flask Frozen-Flask pandas scikit-learn numpy requests
+        pip install flask pandas scikit-learn numpy requests
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
     - name: Run tests
@@ -45,12 +45,6 @@ jobs:
         curl http://localhost:5000 || exit 1
         pkill -f "python app.py"
 
-    - name: Generate static files
-      run: |
-        echo 'from flask_frozen import Freezer; from app import app, movies; freezer = Freezer(app); @freezer.register_generator; def recommend(): return [{"movie": str(id)} for id in movies["id"].tolist()[:10]]; freezer.freeze() if __name__ == "__main__" else None' > freeze.py
-        python freeze.py
-        mkdir -p build/static
-        
     - name: Build artifacts
       run: |
         mkdir -p dist/static
