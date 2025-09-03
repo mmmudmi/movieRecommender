@@ -54,9 +54,9 @@ jobs:
         for file in app.py movies.pkl similarity.pkl; do
           if [ -f "$file" ]; then
             if [ ! -L "$file" ]; then
-              file_size=$(stat -f%z "$file")
+              file_size=$(stat -c%s "$file")
               if [ $file_size -lt 10737418240 ]; then  # 10GB in bytes
-                cp -P "$file" dist/ || echo "Failed to copy $file"
+                cp --preserve=timestamps "$file" dist/ || echo "Failed to copy $file"
                 echo "Copied $file ($(($file_size/1024/1024))MB)"
               else
                 echo "Error: $file is too large ($(($file_size/1024/1024))MB)"
