@@ -45,11 +45,11 @@ jobs:
         curl http://localhost:5000 || exit 1
         pkill -f "python app.py"
 
-    # - name: Build artifacts
-    #   run: |
-    #     mkdir -p dist
-    #     cp -r templates dist/
-    #     cp app.py movies.pkl similarity.pkl dist/
+    - name: Build artifacts
+      run: |
+        mkdir -p dist
+        cp -r templates dist/
+        cp app.py movies.pkl similarity.pkl dist/
         
     - name: Upload artifact
       uses: actions/upload-artifact@v4
