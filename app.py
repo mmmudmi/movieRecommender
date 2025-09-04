@@ -12,11 +12,7 @@ def fetch_poster(movie_id):
 
 def recommend(movie):
     # Get the index of the movie from our DataFrame
-    movie_row = movies[movies['title'] == movie]
-    if movie_row.empty:
-        return [], [], []  # Return empty lists if movie not found
-    
-    index = movie_row.index[0]
+    index = movies[movies['title'] == movie].index[0]
     # Get similarity scores for this movie with all other movies
     similarity_scores = similarity[index]
     # Convert to list of tuples: (index, similarity_score)
