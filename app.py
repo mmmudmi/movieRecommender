@@ -70,10 +70,6 @@ def search():
     
     return render_template('search.html', recommendations=search_results)
 
-@app.route('/random')
-def random_recommendation():
-    return render_template('random.html')
-
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 8080))
     app.run(host='0.0.0.0', port=port, debug=True)

@@ -9,10 +9,9 @@
 </head>
 <body>
     {% include 'components/navbar.html' %}
+    {% include 'components/searchBar.html' %}
     {% block content %}
     <div class="container mt-4">
-        {% include 'components/searchBar.html' %}
-
     <!-- Search Results -->
     <div class="row">
         {% if recommendations %}

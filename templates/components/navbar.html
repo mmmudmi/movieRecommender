@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
-        <a class="navbar-brand" href="/">Movie Recommender</a>
+        <a class="navbar-brand" href="/">MovieNight</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -8,9 +8,17 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="/random">Random</a>
+                    <a class="nav-link" onclick="return randomMovie()">Random</a>
                 </li>
             </ul>
         </div>
     </div>
 </nav>
+
+<script>
+    function randomMovie() {
+        var movieCode = Math.floor(Math.random() * 3499);  
+        window.location.href = '/recommend/' + movieCode;
+        return false;
+    }
+</script>
