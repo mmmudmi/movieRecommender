@@ -1,0 +1,64 @@
+<!-- Search Bar Component -->
+<div class="search-bar-container">
+    <div class="row mb-4">
+        <div class="col-md-8 mx-auto">
+            <form action="{{ url_for('search') }}" method="GET" class="search-form">
+                <div class="input-group">
+                    <input type="text" 
+                           name="query" 
+                           class="form-control search-input" 
+                           placeholder="Search for movies..." 
+                           value="{{ request.args.get('query', '') }}"
+                           autocomplete="off">
+                    <button class="btn btn-primary search-button" type="submit">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Search Bar Styles -->
+<style>
+.search-bar-container {
+    padding: 20px 0;
+    background-color: rgba(255, 255, 255, 0.95);
+}
+
+.search-form {
+    position: relative;
+}
+
+.search-input {
+    padding: 12px 20px;
+    border-radius: 25px 0 0 25px;
+    border: 2px solid #e0e0e0;
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.search-button {
+    border-radius: 0 25px 25px 0;
+    padding: 12px 25px;
+}
+
+.search-button:hover {
+    background-color: #0056b3;
+}
+
+@media (max-width: 768px) {
+    .search-bar-container {
+        padding: 15px 0;
+    }
+    
+    .search-input, .search-button {
+        font-size: 14px;
+        padding: 10px 15px;
+    }
+}
+</style>
