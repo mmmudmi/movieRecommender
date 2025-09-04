@@ -3,9 +3,6 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# Large files
-similarity.pkl
-
 # C extensions
 *.so
 
