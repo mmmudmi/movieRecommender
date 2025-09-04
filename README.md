@@ -17,3 +17,7 @@ python app.py
 ```
 
 Visit http://localhost:5000 in your web browser to use the application.
+
+## Logo
+[![movie-night-white.png](https://i.postimg.cc/L54f8Qrf/movie-night-white.png)](https://postimg.cc/nj5Md2Vc)
+[![movie-night-black.png](https://i.postimg.cc/1XznQnqr/movie-night-black.png)](https://postimg.cc/tZLCdgDs)
