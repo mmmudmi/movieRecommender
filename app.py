@@ -11,8 +11,16 @@ def fetch_poster(movie_id):
     return poster_path, backdrop_path
 
 def recommend(movie):
-    index = movies[movies['title'] == movie].index[0]
-    distances = sorted(list(enumerate(similarity[index])), reverse=True, key=lambda x: x[1])
+    # Get the index of the movie from our DataFrame
+    movie_row = movies[movies['title'] == movie]
+    if movie_row.empty:
+        return [], [], []  # Return empty lists if movie not found
+    
+    index = movie_row.index[0]
+    # Get similarity scores for this movie with all other movies
+    similarity_scores = similarity[index]
+    # Convert to list of tuples: (index, similarity_score)
+    distances = sorted(list(enumerate(similarity_scores)), reverse=True, key=lambda x: x[1])
     recommended_movie_names = []
     recommended_movie_posters = []
     recommended_movie_backdrops = []
