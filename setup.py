@@ -1,31 +1,25 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 
 with open("README.md", "r", encoding="utf-8") as f:
     long_description = f.read()
 
-REPO_NAME = "Movie-Recommender-System"
+## edit below variables as per your requirements -
+
+REPO_NAME = "movieRecommender"
 AUTHOR_USER_NAME = "mmmudmi"
-LIST_OF_REQUIREMENTS = [
-    'Flask>=2.0.1',
-    'pandas>=2.0.0',
-    'requests>=2.26.0',
-    'gunicorn>=20.1.0',
-    'numpy>=1.24.0',
-    'scikit-learn>=1.0.0'
-]
+LIST_OF_REQUIREMENTS = ['streamlit']
 
 
 setup(
-    name="movie-recommender",
+    name=REPO_NAME,
     version="0.0.1",
     author=AUTHOR_USER_NAME,
-    description="A Flask-based Movie Recommender System",
+    description="Movie Recommender System",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url=f"https://github.com/{AUTHOR_USER_NAME}/{REPO_NAME}",
     author_email="mmmudmi@gmail.com",
-    packages=find_packages(),
-    license="MIT",
+    packages=[REPO_NAME],
     python_requires=">=3.7",
     install_requires=LIST_OF_REQUIREMENTS
 )
