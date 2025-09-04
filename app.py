@@ -1,61 +1,63 @@
 import pickle
+import streamlit as st
 import requests
-import pandas as pd
-from flask import Flask, render_template, request
 
-app = Flask(__name__)
+def fetch_poster(movie_id):
+    url = "https://api.themoviedb.org/3/movie/{}?api_key=c7ec19ffdd3279641fb606d19ceb9bb1&language=en-US".format(movie_id)
+    data = requests.get(url)
+    data = data.json()
+    poster_path = "https://image.tmdb.org/t/p/w500/" + data['poster_path']
+    backdrop_path = "https://image.tmdb.org/t/p/w500/" + data['backdrop_path']
+    return poster_path, backdrop_path
 
-movies = pickle.load(open("movies.pkl", 'rb'))
-similarity = pickle.load(open("similarity.pkl", 'rb'))
+def recommend(movie):
+    # Get the index of the movie from our DataFrame
+    index = movies[movies['title'] == movie].index[0]
+    # Get similarity scores for this movie with all other movies
+    similarity_scores = similarity[index]
+    # Convert to list of tuples: (index, similarity_score)
+    distances = sorted(list(enumerate(similarity_scores)), reverse=True, key=lambda x: x[1])
+    recommended_movie_names = []
+    recommended_movie_posters = []
+    recommended_movie_backdrops = []
+    for i in distances[1:6]:
+        # fetch the movie poster
+        movie_id = movies.iloc[i[0]].id
+        poster, backdrop = fetch_poster(movie_id)
+        recommended_movie_names.append(movies.iloc[i[0]].title)
+        recommended_movie_posters.append(poster)
+        recommended_movie_backdrops.append(backdrop)
 
-# TMDB API key - replace with your actual API key
-api_key = "1acee36263c35268f88f2e5defb49492"
-
-def fetch_poster(tmdbId):
-    # Fetch movie poster from TMDB API
-    url = f"https://api.themoviedb.org/3/movie/{tmdbId}?api_key={api_key}"
-    try:
-        response = requests.get(url)
-        data = response.json()
-        if 'poster_path' in data and data['poster_path']:
-            return ["https://image.tmdb.org/t/p/w500" + data['poster_path'], 
-                    "https://image.tmdb.org/t/p/w500" + data['backdrop_path']]
-    except:
-        pass
-    return None
-
-def recommend_by_movie_id(movie_id):
-    index = movies[movies['id']==movie_id].index[0]
-    distance = sorted(list(enumerate(similarity[index])), reverse=True, key=lambda vector:vector[1])
-    recommendations = []
-    for i in distance[1:9]:
-        movie_info = movies.iloc[i[0]]
-        recommendations.append({
-            'id': movie_info['id'],
-            'title': movie_info['title']
-        })
-    recommendations = sorted(recommendations, key=lambda x: x['title'])
-    return pd.DataFrame(recommendations)
-
-@app.route('/')
-def home():
-    # Get list of movies for the dropdown
-    movie_list = list(zip(movies['id'].tolist(), movies['title'].tolist()))
-    return render_template('home.html', movies=movie_list)
-
-@app.route('/recommend', methods=['POST'])
-def recommend():
-    movie_id = int(request.form['movie'])
-    recommendations = recommend_by_movie_id(movie_id)
-    # Add poster URLs to recommendations
-    recommendations['poster_url'], recommendations['backdrop_url'] = zip(*recommendations['id'].apply(fetch_poster))
-
-    return render_template('recommendations.html', 
-                         recommendations=recommendations.to_dict('records'))
-
-if __name__ == '__main__':
-    app.run(debug=True)
+    return recommended_movie_names,recommended_movie_posters,recommended_movie_backdrops
 
 
+st.header('Movie Recommender System Using Machine Learning')
+movies = pickle.load(open('movies.pkl','rb'))
+similarity = pickle.load(open('similarity.pkl','rb'))
 
-#/Users/mudmi/Desktop/movieRecommender/.venv/bin/python app.py run it
+movie_list = movies['title'].values
+selected_movie = st.selectbox(
+    "Type or select a movie from the dropdown",
+    movie_list
+)
+
+if st.button('Show Recommendation'):
+    #recommended_movie_backdrops not being called yet
+    recommended_movie_names,recommended_movie_posters,recommended_movie_backdrops = recommend(selected_movie)
+    col1, col2, col3, col4, col5 = st.columns(5)
+    with col1:
+        st.text(recommended_movie_names[0])
+        st.image(recommended_movie_posters[0])
+    with col2:
+        st.text(recommended_movie_names[1])
+        st.image(recommended_movie_posters[1])
+
+    with col3:
+        st.text(recommended_movie_names[2])
+        st.image(recommended_movie_posters[2])
+    with col4:
+        st.text(recommended_movie_names[3])
+        st.image(recommended_movie_posters[3])
+    with col5:
+        st.text(recommended_movie_names[4])
+        st.image(recommended_movie_posters[4])

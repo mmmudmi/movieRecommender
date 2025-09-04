@@ -1,3 +1,2 @@
 ### dependency
-# streamlit
-flask
+streamlit
