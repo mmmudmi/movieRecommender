@@ -1,6 +1,9 @@
 import pickle
-import streamlit as st
+import os
+from flask import Flask, render_template, request
 import requests
+
+app = Flask(__name__)
 
 def fetch_poster(movie_id):
     url = "https://api.themoviedb.org/3/movie/{}?api_key=c7ec19ffdd3279641fb606d19ceb9bb1&language=en-US".format(movie_id)
@@ -17,47 +20,37 @@ def recommend(movie):
     similarity_scores = similarity[index]
     # Convert to list of tuples: (index, similarity_score)
     distances = sorted(list(enumerate(similarity_scores)), reverse=True, key=lambda x: x[1])
-    recommended_movie_names = []
-    recommended_movie_posters = []
-    recommended_movie_backdrops = []
+    recommendations = []
+    
     for i in distances[1:6]:
-        # fetch the movie poster
-        movie_id = movies.iloc[i[0]].id
+        movie_data = movies.iloc[i[0]]
+        movie_id = movie_data.id
         poster, backdrop = fetch_poster(movie_id)
-        recommended_movie_names.append(movies.iloc[i[0]].title)
-        recommended_movie_posters.append(poster)
-        recommended_movie_backdrops.append(backdrop)
+        recommendations.append({
+            'title': movie_data.title,
+            'poster_url': poster,
+            'backdrop_url': backdrop,
+            'genres': movie_data.genres if 'genres' in movie_data else ''
+        })
+    
+    return recommendations
 
-    return recommended_movie_names,recommended_movie_posters,recommended_movie_backdrops
-
-
-st.header('Movie Recommender System Using Machine Learning')
+# Load the movies and similarity matrices
 movies = pickle.load(open('movies.pkl','rb'))
 similarity = pickle.load(open('similarity.pkl','rb'))
 
-movie_list = movies['title'].values
-selected_movie = st.selectbox(
-    "Type or select a movie from the dropdown",
-    movie_list
-)
+@app.route('/')
+def home():
+    # Create a list of tuples (id, title) for the dropdown
+    movie_list = [(index, title) for index, title in enumerate(movies['title'].values)]
+    return render_template('home.html', movies=movie_list)
 
-if st.button('Show Recommendation'):
-    #recommended_movie_backdrops not being called yet
-    recommended_movie_names,recommended_movie_posters,recommended_movie_backdrops = recommend(selected_movie)
-    col1, col2, col3, col4, col5 = st.columns(5)
-    with col1:
-        st.text(recommended_movie_names[0])
-        st.image(recommended_movie_posters[0])
-    with col2:
-        st.text(recommended_movie_names[1])
-        st.image(recommended_movie_posters[1])
+@app.route('/recommend', methods=['POST'])
+def get_recommendations():
+    selected_movie = movies.iloc[int(request.form['movie'])].title
+    recommendations = recommend(selected_movie)
+    return render_template('recommendations.html', recommendations=recommendations)
 
-    with col3:
-        st.text(recommended_movie_names[2])
-        st.image(recommended_movie_posters[2])
-    with col4:
-        st.text(recommended_movie_names[3])
-        st.image(recommended_movie_posters[3])
-    with col5:
-        st.text(recommended_movie_names[4])
-        st.image(recommended_movie_posters[4])
+if __name__ == '__main__':
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
