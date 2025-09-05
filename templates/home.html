@@ -10,39 +10,132 @@
         body {
             font-family: 'Poppins', sans-serif;
             background-color: black;
+            color: white;
         }
+        .card {
+            transition: transform 0.2s;
+            border: none;
+        }
+        .card:hover {
+            transform: scale(1.03);
+            cursor: pointer;
+        }
+        .card-title {
+            font-size: 0.9rem;
+            margin-bottom: 0.4rem;
+            font-weight: 400;
+        }
+        .card-text small {
+            color: #adb5bd;
+            font-size: 0.8rem;
+        }
+        .card-body {
+            background-color: #000000;
+        }
+        .pagination .page-link {
+            background-color: #000000;
+            border-color: transparent;
+            color: white;
+        }
+        .pagination .page-item.active .page-link {
+            background-color: #000000;
+            color: white;
+            border-color: #ffffff;
+            border-radius: 10pc;
+        }
+        .pagination .page-link:hover {
+            background-color: #000000;
+            border-color: transparent;
+            color: white;
+        }
+        .pagination .page-item.disabled .page-link {
+            background-color: #000000;
+            color: #ffffff;
+            border-color: transparent;
+        }
+        .page-link:focus {
+            box-shadow: none;
+            border-color: transparent;
+        }
+        .page-link:hover {
+            transform: scale(1.15);
+        }
+    
     </style>
 </head>
 <body>
     {% include 'components/navbar.html' %}
     {% include 'components/searchBar.html' %}
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <form action="#" onsubmit="return goToMovie()" class="mb-4">
-                    <div class="input-group">
-                        <select id="movieSelect" class="form-select" required>
-                            <option value="">Select a movie...</option>
-                            {% for id, title in movies %}
-                            <option value="{{ id }}">{{ title }}</option>
-                            {% endfor %}
-                        </select>
-                        <button type="submit" class="btn btn-primary">Get Recommendations</button>
+    <div class="container">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+            {% for movie in movies %}
+            <div class="col">
+                <div onclick="location.href='/recommend/{{ movie.index }}'" class="card h-100 bg-dark text-white">
+                    <img src="{{ movie.poster_url }}" class="card-img-top" alt="{{ movie.title }}" style="height: 400px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ movie.title }}</h5>
+                        <p class="card-text"><small>{{ movie.genres }}</small></p>
                     </div>
-                </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        <div class="row mt-4 mb-4">
+            <div class="col-12">
+                <nav aria-label="Movie navigation">
+                    <ul class="pagination justify-content-center">
+                        {% if current_page > 1 %}
+                        <li class="page-item">
+                            <a class="page-link" href="/?page={{ current_page - 1 }}">&laquo; Previous</a>
+                        </li>
+                        {% endif %}
+
+                        {# Show first page #}
+                        {% if current_page > 3 %}
+                        <li class="page-item">
+                            <a class="page-link" href="/?page=1">1</a>
+                        </li>
+                        {% if current_page > 4 %}
+                        <li class="page-item disabled">
+                            <span class="page-link">...</span>
+                        </li>
+                        {% endif %}
+                        {% endif %}
+
+                        {# Show pages around current page #}
+                        {% for page_num in range(current_page - 2, current_page + 3) %}
+                            {% if page_num > 0 and page_num <= total_pages %}
+                            <li class="page-item {% if page_num == current_page %}active{% endif %}">
+                                <a class="page-link" href="/?page={{ page_num }}">{{ page_num }}</a>
+                            </li>
+                            {% endif %}
+                        {% endfor %}
+
+                        {# Show last page #}
+                        {% if current_page < total_pages - 2 %}
+                        {% if current_page < total_pages - 3 %}
+                        <li class="page-item disabled">
+                            <span class="page-link">...</span>
+                        </li>
+                        {% endif %}
+                        <li class="page-item">
+                            <a class="page-link" href="/?page={{ total_pages }}">{{ total_pages }}</a>
+                        </li>
+                        {% endif %}
+
+                        {% if current_page < total_pages %}
+                        <li class="page-item">
+                            <a class="page-link" href="/?page={{ current_page + 1 }}">Next &raquo;</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
             </div>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        function goToMovie() {
-            var select = document.getElementById('movieSelect');
-            var movieCode = select.value;
-            if (movieCode) {
-                window.location.href = '/recommend/' + movieCode;
-            }
-            return false;
-        }
     </script>
 </body>
 </html>

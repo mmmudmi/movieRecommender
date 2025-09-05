@@ -5,6 +5,8 @@ import requests
 
 app = Flask(__name__)
 
+per_page = 20
+
 def fetch_poster(movie_id):
     url = "https://api.themoviedb.org/3/movie/{}?api_key=c7ec19ffdd3279641fb606d19ceb9bb1&language=en-US".format(movie_id)
     data = requests.get(url)
@@ -39,9 +41,35 @@ similarity = pickle.load(open('similarity.pkl','rb'))
 
 @app.route('/')
 def home():
-    # Create a list of tuples (id, title) for the dropdown
-    movie_list = [(index, title) for index, title in enumerate(movies['title'].values)]
-    return render_template('home.html', movies=movie_list)
+    # Get the page number from the query parameters, default to 1
+    page = request.args.get('page', 1, type=int)
+    
+    # Calculate pagination
+    total_movies = len(movies)
+    total_pages = (total_movies + per_page - 1) // per_page
+    
+    # Calculate start and end indices for the current page
+    start_idx = (page - 1) * per_page
+    end_idx = min(start_idx + per_page, total_movies)
+    
+    # Get only the movies for the current page
+    paginated_movies = []
+    for index in range(start_idx, end_idx):
+        row = movies.iloc[index]
+        movie_id = row.id
+        poster, backdrop = fetch_poster(movie_id)
+        paginated_movies.append({
+            'index': index,
+            'title': row.title,
+            'poster_url': poster,
+            'backdrop_url': backdrop,
+            'genres': row.genres if 'genres' in row else ''
+        })
+    
+    return render_template('home.html', 
+                         movies=paginated_movies,
+                         current_page=page,
+                         total_pages=total_pages)
 
 @app.route('/recommend/<int:movie_code>')
 def get_recommendations(movie_code):
@@ -51,8 +79,11 @@ def get_recommendations(movie_code):
 @app.route('/search')
 def search():
     query = request.args.get('query', '').lower()
+    page = request.args.get('page', 1, type=int)
+
     if not query:
-        return render_template('home.html', movies=[(index, title) for index, title in enumerate(movies['title'].values)])
+        # If no query, redirect to home page with pagination
+        return home()
     
     # Filter movies based on the search query
     search_results = []
@@ -68,7 +99,20 @@ def search():
                 'genres': movies.iloc[index].genres if 'genres' in movies.iloc[index] else ''
             })
     
-    return render_template('search.html', recommendations=search_results)
+    # Calculate pagination for search results
+    total_results = len(search_results)
+    total_pages = (total_results + per_page - 1) // per_page
+    
+    # Get the current page's results
+    start_idx = (page - 1) * per_page
+    end_idx = min(start_idx + per_page, total_results)
+    paginated_results = search_results[start_idx:end_idx]
+    
+    return render_template('search.html', 
+                         movies=paginated_results,
+                         current_page=page,
+                         total_pages=total_pages,
+                         query=query)
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 8080))
