@@ -2,17 +2,18 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <div class="search-bar-container">
     <div class="row mb-4">
-        <div class="col-md-4 mx-auto">
-            <form action="{{ url_for('search') }}" method="GET" class="search-form">
+        <div class="col-md-5 mx-auto">
+            <form action="{{ url_for('home') }}" method="GET" class="search-form" id="searchForm">
                 <div class="input-group">
                     <input type="text" 
                            name="query" 
                            class="form-control search-input" 
-                           placeholder="Search for movies..." 
-                           value="{{ request.args.get('query', '') }}"
-                           autocomplete="off">
+                           placeholder="Search for movies" 
+                           value="{{ search_query }}"
+                           autocomplete="off"
+                           id="searchInput">
                     <button class="btn btn-primary search-button" type="submit">
-                        <i class="fa fa-search"></i> 
+                        <i class="fa fa-search"></i>
                     </button>
                 </div>
             </form>
@@ -38,7 +39,6 @@
     transition: all 0.3s ease;
 }
 
-/* Override Bootstrap's default blue outline */
 .search-input.form-control:focus {
     outline: none !important;
     box-shadow: none !important;
@@ -46,24 +46,19 @@
 
 .btn-primary {
     background-color: #ffffff !important;
-    border-color: #ffffff !important;
+    border-color: transparent !important;
     color: #333333 !important; /*icon*/
 }
 
-.btn-primary:focus {
-    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.15) !important;
-}
-
 .search-input:focus {
-    border-color: #ffff;
-    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.15);
+    border-color: transparent;
 }
 
 .search-button {
     border-radius: 0 25px 25px 0;
     padding: 12px 25px;
     background-color: #ffffff;
-    border-color: #ffffff;
+    border-color: transparent;
 }
 
 .search-button i {

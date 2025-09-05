@@ -44,12 +44,12 @@
             border-radius: 10pc;
         }
         .pagination .page-link:hover {
-            background-color: #000000;
+            background-color: transparent;
             border-color: transparent;
             color: white;
         }
         .pagination .page-item.disabled .page-link {
-            background-color: #000000;
+            background-color: transparent;
             color: #ffffff;
             border-color: transparent;
         }
@@ -71,7 +71,7 @@
             {% for movie in movies %}
             <div class="col">
                 <div onclick="location.href='/recommend/{{ movie.index }}'" class="card h-100 bg-dark text-white">
-                    <img src="{{ movie.poster_url }}" class="card-img-top" alt="{{ movie.title }}" style="height: 400px; object-fit: cover;">
+                    <img src="{{ movie.poster_url }}" class="card-img-top" alt="{{ movie.title }}" style="height: 460px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">{{ movie.title }}</h5>
                         <p class="card-text"><small>{{ movie.genres }}</small></p>
