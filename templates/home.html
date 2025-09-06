@@ -24,7 +24,7 @@
             {% for movie in movies %}
             <div class="col">
                 <div onclick="location.href='/movie/detail/{{ movie.index }}'" class="card h-100 bg-dark text-white">
-                    <img src="{{ movie.poster_url }}" class="card-img-top" alt="{{ movie.title }}" style="height: 460px; object-fit: cover;">
+                    <img src="{{ movie.poster_url }}" class="card-img-top" alt="{{ movie.title }}">
                     <div class="card-body">
                         <h5 class="card-title">{{ movie.title }}</h5>
                         <p class="card-text"><small>{{ movie.genres }}</small></p>

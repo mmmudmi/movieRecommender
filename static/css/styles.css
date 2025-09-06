@@ -157,6 +157,15 @@ body {
     margin-bottom: 2rem;
 }
 
+.card-img-top {
+    height: 460px; 
+    object-fit: cover;
+}
+
+.nav-logo {
+    height: 60px;
+}
+
 @media (max-width: 767px) {
     .hero-section { 
         min-height: 420px;
@@ -165,9 +174,9 @@ body {
     }
     .movie-detail-poster { max-width: 200px !important; }
     .hero-content .row { padding: 0rem !important; }
-    .movie-title { font-size: 1rem !important; }
-    .movie-genres { font-size: 0.7rem !important; }
-    .movie-overview { font-size: 0.8rem !important; }
+    .movie-title { font-size: 2rem !important; }
+    .movie-genres { font-size: 0.8rem !important; }
+    .movie-overview { font-size: 0.9rem !important; }
     .hero-movie-detail-content {
         flex-direction: column;
         align-items: center;
@@ -176,4 +185,14 @@ body {
         max-height: 75vh;
         padding-bottom: 10vh;
     }
+    .hero-title {
+        font-size: 1.5rem !important;
+    }
+    .nav-logo {
+        height: 50px;
+    }
+    .nav-menu {
+        font-size: smaller;
+    }
+
 }
