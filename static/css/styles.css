@@ -129,13 +129,13 @@ body {
 }
 
 .movie-genres {
-    font-size: 1.1rem;
+    font-size: 0.9rem;
     color: #adb5bd;
     margin-bottom: 1.5rem;
 }
 
 .movie-overview {
-    font-size: 1.1rem;
+    font-size: 0.9rem;
     line-height: 1.6;
     color: #e9ecef;
     margin-bottom: 2rem;
