@@ -1,28 +1,38 @@
-from flask_frozen import Freezer
+import os
 from app import app, movies
-import pandas as pd
+import requests
+from flask import url_for
+import shutil
 
-# Configure the app for static generation
-app.config['FREEZER_RELATIVE_URLS'] = True
-app.config['FREEZER_IGNORE_MIMETYPE_WARNINGS'] = True
-freezer = Freezer(app)
+def save_page(url, filename):
+    with app.test_client() as client:
+        response = client.get(url)
+        os.makedirs(os.path.dirname(f'build/{filename}'), exist_ok=True)
+        with open(f'build/{filename}', 'wb') as f:
+            f.write(response.data)
 
-# Define URL generators for Frozen-Flask
-@freezer.register_generator
-def index():
-    yield {}  # Just the main page
+def build_static_site():
+    # Create build directory
+    if os.path.exists('build'):
+        shutil.rmtree('build')
+    os.makedirs('build')
 
-@freezer.register_generator
-def movie_detail():
-    # Generate URLs for all movies in your dataset
-    for index, row in movies.iterrows():
-        yield {'movie_id': row['id']}
+    # Copy static files
+    if os.path.exists('static'):
+        shutil.copytree('static', 'build/static')
 
-@freezer.register_generator
-def recommend():
-    # Generate URLs for recommendations
-    for index, row in movies.head(10).iterrows():  # Limit to first 10 for testing
-        yield {'movie_id': row['id']}
+    # Generate index page
+    save_page('/', 'index.html')
+
+    # Generate movie detail pages for first 100 movies (for testing)
+    for index, row in movies.head(100).iterrows():
+        movie_id = row['id']
+        save_page(f'/movie/{movie_id}', f'movie/{movie_id}/index.html')
+
+    print("Static site built successfully in 'build' directory")
 
 if __name__ == '__main__':
-    freezer.freeze()
+    # Set the application context
+    with app.app_context():
+        app.config['SERVER_NAME'] = 'localhost'  # Required for url_for to work
+        build_static_site()

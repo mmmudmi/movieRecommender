@@ -25,12 +25,16 @@ jobs:
         python -m pip install --upgrade pip
         pip install --upgrade setuptools wheel
         pip install -r requirements.txt
-        pip install frozen-flask
 
     - name: Build static site
       run: |
-        mkdir -p build
-        PYTHONPATH=$PYTHONPATH:$(pwd) python build.py
+        export FLASK_APP=app.py
+        export FLASK_ENV=production
+        python build.py
+
+    - name: Create .nojekyll file
+      run: |
+        touch build/.nojekyll
 
     - name: Deploy to GitHub Pages
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
@@ -38,3 +42,4 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./build
+        enable_jekyll: false
