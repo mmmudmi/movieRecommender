@@ -1,0 +1,6 @@
+include requirements.txt
+include README.md
+recursive-include static *
+recursive-include templates *
+include *.pkl
+include *.csv
