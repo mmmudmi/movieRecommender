@@ -44,6 +44,13 @@ body {
         rgba(0,0,0,1) 100%);
 }
 
+.hero-movie-detail-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 3rem;
+    width: 100%;
+}
+
 .hero-content-center {
     position: relative;
     z-index: 2;
@@ -119,7 +126,6 @@ body {
     transform: scale(1.15);
 }
 
-/* Detail page styles */
 .movie-card {
     margin-bottom: 20px;
 }
@@ -149,4 +155,25 @@ body {
     line-height: 1.6;
     color: #e9ecef;
     margin-bottom: 2rem;
+}
+
+@media (max-width: 767px) {
+    .hero-section { 
+        min-height: 420px;
+        overflow: auto;
+        margin-bottom: 2rem;
+    }
+    .movie-detail-poster { max-width: 200px !important; }
+    .hero-content .row { padding: 0rem !important; }
+    .movie-title { font-size: 1rem !important; }
+    .movie-genres { font-size: 0.7rem !important; }
+    .movie-overview { font-size: 0.8rem !important; }
+    .hero-movie-detail-content {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+        -webkit-overflow-scrolling: touch;
+        max-height: 75vh;
+        padding-bottom: 10vh;
+    }
 }
