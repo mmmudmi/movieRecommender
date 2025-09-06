@@ -12,6 +12,42 @@
             background-color: black;
             color: white;
         }
+        .hero-section {
+            position: relative;
+            height: 60vh;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .hero-backdrop {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.6;
+        }
+        .hero-gradient {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, 
+                rgba(0,0,0,0.4) 0%, 
+                rgba(0,0,0,0.6) 80%, 
+                rgba(0,0,0,1) 100%);
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            padding: 0 1rem;
+            margin-top: -5vh;
+        }
         .card {
             transition: transform 0.2s;
             border: none;
@@ -65,7 +101,13 @@
 </head>
 <body>
     {% include 'components/navbar.html' %}
-    {% include 'components/searchBar.html' %}
+    <div class="hero-section">
+        <img src="{{ hero_backdrop }}" class="hero-backdrop" alt="Movie Backdrop">
+        <div class="hero-gradient"></div>
+        <div class="hero-content" style="padding-top: 5pc;">
+            {% include 'components/searchBar.html' %}
+        </div>
+    </div>
     <div class="container">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
             {% for movie in movies %}

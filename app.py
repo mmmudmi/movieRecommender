@@ -41,10 +41,20 @@ def recommend(index):
 movies = pickle.load(open('movies.pkl','rb'))
 similarity = pickle.load(open('similarity.pkl','rb'))
 
+def get_random_backdrop():
+    # Get a random movie from the dataset
+    random_movie = movies.sample(n=1).iloc[0]
+    movie_id = random_movie['id']
+    _, backdrop = fetch_poster(movie_id)
+    return backdrop
+
 @app.route('/')
 def home():
     search_query = request.args.get('query', '').strip()
     page = request.args.get('page', 1, type=int)
+    
+    # Get a random backdrop for the hero section
+    backdrop_url = get_random_backdrop()
     
     filtered_movies = movies
     if search_query:
@@ -86,7 +96,8 @@ def home():
                          movies=paginated_movies,
                          current_page=page,
                          total_pages=total_pages,
-                         search_query=search_query)
+                         search_query=search_query,
+                         hero_backdrop=backdrop_url)
 
 @app.route('/search')
 def search():
