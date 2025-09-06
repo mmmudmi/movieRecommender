@@ -7,10 +7,10 @@ import pandas as pd
 app = Flask(__name__)
 
 per_page = 20
-TMDB_API_KEY = "c7ec19ffdd3279641fb606d19ceb9bb1"
+TMDB_API_KEY = os.environ.get('TMDB_API_KEY')
 
 def fetch_poster(movie_id):
-    url = "https://api.themoviedb.org/3/movie/{}?api_key=c7ec19ffdd3279641fb606d19ceb9bb1&language=en-US".format(movie_id)
+    url = "https://api.themoviedb.org/3/movie/{}?api_key={}&language=en-US".format(movie_id, TMDB_API_KEY)
     data = requests.get(url)
     data = data.json()
     poster_path = "https://image.tmdb.org/t/p/w500/" + data['poster_path']
@@ -18,7 +18,7 @@ def fetch_poster(movie_id):
     return poster_path, backdrop_path
 
 def fetch_movie_details(movie_id):
-    url = "https://api.themoviedb.org/3/movie/{}?api_key=c7ec19ffdd3279641fb606d19ceb9bb1&language=en-US".format(movie_id)
+    url = "https://api.themoviedb.org/3/movie/{}?api_key={}&language=en-US".format(movie_id, TMDB_API_KEY)
     data = requests.get(url)
     data = data.json()
     data['full_poster_path'] = "https://image.tmdb.org/t/p/w500/" + data['poster_path']
