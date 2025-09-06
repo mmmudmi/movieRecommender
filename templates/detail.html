@@ -15,19 +15,21 @@
         <img src="{{ movie_data.full_backdrop_path }}" class="hero-backdrop" alt="Movie Backdrop">
         <div class="hero-gradient"></div>
         <div class="hero-content">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-4">
-                        <img src="{{ movie_data.full_poster_path }}" class="movie-detail-poster" alt="Movie Poster">
-                    </div>
-                    <div class="col-md-8">
-                        <h1 class="movie-title">{{ movie_data.title }}</h1>
-                        {% if movie_data.genres %}
-                        <p class="movie-genres">Genres: {{ movie_data.genres }}</p>
-                        {% endif %}
-                        {% if movie_data.overview %}
-                        <p class="movie-overview">{{ movie_data.overview }}</p>
-                        {% endif %}
+            <div style="display: flex; align-items: flex-start; gap: 3rem; width: 100%;">
+                <img class="movie-detail-poster" src="{{ movie_data.full_poster_path }}" alt="Movie Poster" style="max-width: 250px; width: 100%; height: auto; border-radius: 10px; box-shadow: 0 4px 16px rgba(0,0,0,0.2);">
+                <div style="flex: 1 1 0; min-width: 0;">
+                    <h1 class="movie-title">{{ movie_data.title }}</h1>
+                    <p class="movie-genres">Genres: {{ movie_data.genres}}</p>
+                    <p class="movie-overview">{{ movie_data.overview }}</p>
+                    <p class="movie-genres">{{ movie_data.runtime }} minutes</p>
+                </div>
+                <div style="display: flex; align-items: flex-start; justify-content: flex-end; flex: 0 0 100px; min-width: 100px;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem;">
+                        <span style="display: inline-flex; justify-content: center; align-items: center; width: 55px; height: 55px; border-radius: 50%; 
+                            background: transparent; color: #ffd700; font-weight: 600; font-size: 1.2rem; border: 2px solid #ffd700; box-shadow: 0 2px 8px rgba(0,0,0,0.12);">
+                            {{ '%.2f'|format(movie_data.vote_average) }}
+                        </span>
+                        <span style="color: #fff; font-size: 1rem;">/ 10</span>
                     </div>
                 </div>
             </div>
@@ -36,16 +38,14 @@
     <h2 class="text-center mt-3" style="font-size: 1rem;">Recommended Movies</h2>
 
     <div class="container mt-5">
-        <div class="row">
+        <div style="display: flex; flex-direction: row; overflow-x: auto; gap: 1.5rem; padding-bottom: 1rem;">
             {% for movie in recommendations %}
-            <div class="col-md-3">
-                <div class="card movie-card">
-                    {% if movie.poster_url %}
-                    <img src="{{ movie.poster_url }}" class="movie-poster" alt="{{ movie.title }}">
-                    {{ movie.backdrop_url }}
-                    {% endif %}
+            <div style="width: 300px; flex: 0 0 300px;">
+                <div onclick="location.href='/movie/detail/{{ movie.index }}'" class="card h-100 bg-dark text-white" style="width: 100%;">
+                    <img class="card-img-top" src="{{ movie.poster_url }}" alt="{{ movie.title }}" style="height: 460px; object-fit: cover;">
                     <div class="card-body">
                         <h5 class="card-title">{{ movie.title }}</h5>
+                        <p class="card-text"><small>{{ movie.genres }}</small></p>
                     </div>
                 </div>
             </div>

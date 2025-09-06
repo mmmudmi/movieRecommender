@@ -38,6 +38,7 @@ def recommend(index):
         movie_id = movie_data.id
         poster, backdrop = fetch_poster(movie_id)
         recommendations.append({
+            'index': i[0],
             'title': movie_data.title,
             'poster_url': poster,
             'backdrop_url': backdrop,

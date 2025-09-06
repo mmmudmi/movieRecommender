@@ -6,12 +6,20 @@ body {
 
 .hero-section {
     position: relative;
-    height: 60vh;
+    height: 80vh;
     overflow: hidden;
     margin-bottom: 2rem;
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.hero-title {
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: #ffffff;
+    text-align: center;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.6);
 }
 
 .hero-backdrop {
@@ -47,7 +55,9 @@ body {
 .hero-content {
     z-index: 2;
     width: 100%;
-    padding: 0 1rem;
+    margin-top: 10pc;
+    padding: 3rem;
+    height: 80vh;
 }
 
 .card {
@@ -135,7 +145,7 @@ body {
 }
 
 .movie-overview {
-    font-size: 0.9rem;
+    font-size: 1rem;
     line-height: 1.6;
     color: #e9ecef;
     margin-bottom: 2rem;
