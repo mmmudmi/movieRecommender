@@ -17,6 +17,15 @@ def fetch_poster(movie_id):
     backdrop_path = "https://image.tmdb.org/t/p/w500/" + data['backdrop_path']
     return poster_path, backdrop_path
 
+def fetch_movie_details(movie_id):
+    url = "https://api.themoviedb.org/3/movie/{}?api_key=c7ec19ffdd3279641fb606d19ceb9bb1&language=en-US".format(movie_id)
+    data = requests.get(url)
+    data = data.json()
+    data['full_poster_path'] = "https://image.tmdb.org/t/p/w500/" + data['poster_path']
+    data['full_backdrop_path'] = "https://image.tmdb.org/t/p/w500/" + data['backdrop_path']
+    data['genres'] = ', '.join([genre['name'] for genre in data.get('genres', [])])
+    return data
+
 def recommend(index):
     # Get similarity scores for this movie with all other movies
     similarity_scores = similarity[index]
@@ -116,7 +125,6 @@ def search():
                 'title': row.title,
                 'poster_url': poster,
                 'backdrop_url': backdrop,
-                'genres': row.genres if 'genres' in row else ''
             })
     
     return render_template('home.html', 
@@ -125,10 +133,13 @@ def search():
                          total_pages=1,
                          is_search=True)
 
-@app.route('/recommend/<int:movie_code>')
-def get_recommendations(movie_code):
+@app.route('/movie/detail/<int:movie_code>')
+def movie_detail(movie_code):
+    movie_data = movies.iloc[movie_code]
+    movie_id = movie_data.id
+    movie_data = fetch_movie_details(movie_id)
     recommendations = recommend(movie_code)
-    return render_template('recommendations.html', recommendations=recommendations)
+    return render_template('detail.html', movie_data=movie_data, recommendations=recommendations)
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 8080))

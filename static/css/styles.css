@@ -1,0 +1,142 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: black;
+    color: white;
+}
+
+.hero-section {
+    position: relative;
+    height: 60vh;
+    overflow: hidden;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.65;
+}
+
+.hero-gradient {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, 
+        rgba(0,0,0,0.4) 0%, 
+        rgba(0,0,0,0.6) 80%, 
+        rgba(0,0,0,1) 100%);
+}
+
+.hero-content-center {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    padding: 0 1rem;
+    margin-top: -5vh;
+}
+
+.hero-content {
+    z-index: 2;
+    width: 100%;
+    padding: 0 1rem;
+}
+
+.card {
+    transition: transform 0.2s;
+    border: none;
+}
+
+.card:hover {
+    transform: scale(1.03);
+    cursor: pointer;
+}
+
+.card-title {
+    font-size: 0.9rem;
+    margin-bottom: 0.4rem;
+    font-weight: 400;
+}
+
+.card-text small {
+    color: #adb5bd;
+    font-size: 0.8rem;
+}
+
+.card-body {
+    background-color: #000000;
+}
+
+.pagination .page-link {
+    background-color: #000000;
+    border-color: transparent;
+    color: white;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #000000;
+    color: white;
+    border-color: #ffffff;
+    border-radius: 10pc;
+}
+
+.pagination .page-link:hover {
+    background-color: transparent;
+    border-color: transparent;
+    color: white;
+}
+
+.pagination .page-item.disabled .page-link {
+    background-color: transparent;
+    color: #ffffff;
+    border-color: transparent;
+}
+
+.page-link:focus {
+    box-shadow: none;
+    border-color: transparent;
+}
+
+.page-link:hover {
+    transform: scale(1.15);
+}
+
+/* Detail page styles */
+.movie-card {
+    margin-bottom: 20px;
+}
+
+.movie-detail-poster {
+    width: 100%;
+    max-width: 400px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.movie-title {
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: #ffffff;
+}
+
+.movie-genres {
+    font-size: 1.1rem;
+    color: #adb5bd;
+    margin-bottom: 1.5rem;
+}
+
+.movie-overview {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #e9ecef;
+    margin-bottom: 2rem;
+}
