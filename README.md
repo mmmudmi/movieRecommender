@@ -4,7 +4,13 @@ A Flask-based movie recommendation system that suggests similar movies based on 
 
 ## Live Demo
 - [Movie Recommender on Render](https://movierecommender-88vk.onrender.com/)
-  
+
+<p align="center">
+  <a href="https://github.com/user-attachments/assets/873ec688-5e8d-4cce-8ecb-40a73f3163e3">
+    <img src="https://github.com/user-attachments/assets/873ec688-5e8d-4cce-8ecb-40a73f3163e3" alt="Movie Recommender Demo" width="800"/>
+  </a>
+</p>
+
 ## Features
 - Movie recommendations based on content similarity
 - Integration with TMDB API for movie posters and details
